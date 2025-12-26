@@ -1,36 +1,34 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Manhaj.ai
 
-## Getting Started
+**منهج.آي** هو منصة تعليمية إسلامية سلفية تهدف إلى تقديم محتوى علمي موثوق، يشمل:
 
-First, run the development server:
+- نبذة عن العلماء السلفيين المعاصرين مثل ابن باز، ابن عثيمين، الألباني، سليمان الرحيلي، عبد الرزاق البدر، محمد سعيد رسلان.
+- عرض مقالات وفتاوى بطريقة منظمة ومتجددة.
+- مساعد ذكي للإجابة على الأسئلة الشائعة وفق منهج السلف.
+- واجهة إدارة للمسؤولين لإضافة وتحرير العلماء والمقالات.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📌 المميزات
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **عرض scholars و articles**: واجهة نظيفة تعرض نبذة عن العلماء ومقالاتهم.
+- **نظام Auth متقدم**: دعم login/signup مع أدوار `admin` و `viewer`.
+- **Admin Dashboard**: CRUD كامل للعلماء والمقالات والمواضيع.
+- **Viewer Pages**: عرض مقالات وعلماء بشكل مرتب وحديث.
+- **Theme Neutral Clean**: يدعم الوضع الفاتح والداكن.
+- **Responsive Design**: متوافق مع الهواتف والمكاتب.
+- **Supabase Integration**: Auth, DB, RLS و Logic جاهز في مجلد `services`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🛠 التقنيات
 
-To learn more about Next.js, take a look at the following resources:
+- **Frontend**: Next.js + React + TailwindCSS + shadcn/ui + Framer Motion
+- **Backend / DB**: Supabase (Postgres + Auth + RLS)
+- **AI**: Gemini AI keys (مساعد ذكي للإجابة على الأسئلة)
+- **Animations**: tw-animate-css
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## ⚡ الهيكلية
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
