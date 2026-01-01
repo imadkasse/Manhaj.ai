@@ -15,7 +15,7 @@ export default function AdminArticles() {
 
   const loadArticles = async () => {
     try {
-      const data = await articlesService.getAllArticles(false); // fetch all including unpublished
+      const data = await articlesService.getAllArticles(); // fetch all including unpublished
       setArticles(data || []);
     } catch (error) {
       console.error("Failed to load articles", error);

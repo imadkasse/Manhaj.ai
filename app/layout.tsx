@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Amiri, Noto_Naskh_Arabic } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import { AuthProvider } from "@/components/AuthProvider";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -30,14 +31,22 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="ar"
+      dir="ltr"
+      suppressHydrationWarning
       className={cn(inter.variable, amiri.variable, notoNaskh.variable)}>
-      <body className="flex flex-col min-h-screen bg-background font-sans antialiased text-foreground">
-        <AuthProvider>
-          <Navbar />
-          <main className="flex-grow">{children}</main>
-          <Footer />
-        </AuthProvider>
+      <body className=" flex flex-col min-h-screen bg-background font-sans antialiased text-foreground">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange>
+          <AuthProvider>
+            <Navbar />
+            <main className="grow">{children}</main>
+            <Footer />
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -11,18 +11,15 @@ export type UpdateArticleDTO =
   Database["public"]["Tables"]["content"]["Update"];
 
 export const articlesService = {
-  async getAllArticles(publishedOnly = true) {
-    let query = supabase
+  async getAllArticles() {
+    const { data, error } = await supabase
       .from("content")
       .select("*, scholars(name), topics(name)")
+      .eq("published", true)
       .order("created_at", { ascending: false });
 
-    if (publishedOnly) {
-      query = query.eq("published", true);
-    }
-
-    const { data, error } = await query;
     if (error) throw error;
+
     return data;
   },
 

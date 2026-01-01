@@ -5,80 +5,94 @@ import { useAuth } from "@/components/AuthProvider";
 import { Menu, X, User as UserIcon } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export function Navbar() {
   const { user, signOut } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
+  // Active link style handling could be added here similar to usePathname
+  const navLinkClass =
+    "text-foreground/80 hover:text-primary transition-colors px-3 py-2 text-base font-amiri font-bold";
+
   return (
-    <nav className="bg-primary text-primary-foreground shadow-md sticky top-0 z-50">
+    <nav className="bg-background/80 backdrop-blur-md border-b border-border sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 items-center">
-          <div className="flex-shrink-0 flex items-center">
-            <Link
-              href="/"
-              className="font-bold text-2xl font-amiri text-secondary">
-              Manhaj.ai
+        <div className="flex justify-between h-20 items-center">
+          {/* Logo Section */}
+          <div className="shrink-0 flex items-center gap-2">
+            <Link href="/" className="flex flex-col items-start bg-transparent">
+              <span className="font-bold text-2xl font-amiri text-primary tracking-wide">
+                منهج.ai
+              </span>
+              <span className="text-[0.65rem] text-muted-foreground uppercase tracking-widest hidden sm:block font-noto-naskh">
+                حفظ العلم الشرعي الأصيل
+              </span>
             </Link>
           </div>
 
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-4">
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-1 space-x-reverse">
+            <Link href="/" className={navLinkClass}>
+              الرئيسية
+            </Link>
+            <Link href="/scholars" className={navLinkClass}>
+              العلماء
+            </Link>
+            <Link href="/articles" className={navLinkClass}>
+              الفتاوى والمقالات
+            </Link>
+            <Link href="/ai" className={navLinkClass}>
+              المستشار الذكي
+            </Link>
+            {user?.role === "admin" && (
               <Link
-                href="/"
-                className="hover:text-secondary px-3 py-2 rounded-md font-medium">
-                Home
+                href="/admin"
+                className={cn(navLinkClass, "text-amber-600")}>
+                الإدارة
               </Link>
-              <Link
-                href="/scholars"
-                className="hover:text-secondary px-3 py-2 rounded-md font-medium">
-                Scholars
-              </Link>
-              <Link
-                href="/articles"
-                className="hover:text-secondary px-3 py-2 rounded-md font-medium">
-                Articles/Ftawa
-              </Link>
-              {user?.role === "admin" && (
-                <Link
-                  href="/admin"
-                  className="text-secondary hover:text-white px-3 py-2 rounded-md font-medium border border-secondary">
-                  Admin Panel
-                </Link>
-              )}
-            </div>
+            )}
           </div>
 
-          <div className="hidden md:block">
+          {/* Actions */}
+          <div className="hidden md:flex items-center gap-4">
+            <ThemeToggle />
             {user ? (
-              <div className="flex items-center space-x-4">
-                <span className="text-sm opacity-80">{user.email}</span>
+              <div className="flex items-center gap-3 pl-2 border-l border-border/50">
+                <div className="text-right hidden lg:block">
+                  <p className="text-xs text-muted-foreground">حسابي</p>
+                  <p className="text-sm font-medium leading-none">
+                    {user.email?.split("@")[0]}
+                  </p>
+                </div>
                 <button
                   onClick={signOut}
-                  className="bg-secondary text-primary px-4 py-2 rounded hover:bg-secondary/90 font-medium transition-colors">
-                  Logout
+                  className="text-xs font-medium text-muted-foreground hover:text-destructive transition-colors">
+                  الخروج
                 </button>
               </div>
             ) : (
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center gap-3">
                 <Link
                   href="/login"
-                  className="hover:text-secondary px-3 py-2 rounded-md font-medium">
-                  Login
+                  className="text-sm font-medium text-foreground hover:text-primary transition-colors font-noto-naskh">
+                  تسجيل الدخول
                 </Link>
                 <Link
                   href="/signup"
-                  className="bg-secondary text-primary px-4 py-2 rounded hover:bg-secondary/90 font-medium transition-colors">
-                  Sign Up
+                  className="bg-primary text-primary-foreground px-5 py-2 rounded-full text-sm font-bold hover:bg-primary/90 transition-all shadow-sm font-noto-naskh">
+                  حساب جديد
                 </Link>
               </div>
             )}
           </div>
 
+          {/* Mobile Menu Button */}
           <div className="-mr-2 flex md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md hover:text-secondary focus:outline-none">
+              className="inline-flex items-center justify-center p-2 rounded-md hover:text-primary focus:outline-none">
+              <span className="sr-only">Open main menu</span>
               {isOpen ? (
                 <X className="h-6 w-6" />
               ) : (
@@ -89,57 +103,68 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden bg-primary pb-4">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+        <div className="md:hidden bg-background border-t border-border">
+          <div className="px-4 pt-4 pb-6 space-y-2 text-right">
             <Link
               href="/"
-              className="block hover:text-secondary px-3 py-2 rounded-md font-medium">
-              Home
+              className="block px-3 py-3 rounded-md text-base font-medium hover:bg-muted font-noto-naskh">
+              الرئيسية
             </Link>
             <Link
               href="/scholars"
-              className="block hover:text-secondary px-3 py-2 rounded-md font-medium">
-              Scholars
+              className="block px-3 py-3 rounded-md text-base font-medium hover:bg-muted font-noto-naskh">
+              العلماء
             </Link>
             <Link
               href="/articles"
-              className="block hover:text-secondary px-3 py-2 rounded-md font-medium">
-              Articles/Ftawa
+              className="block px-3 py-3 rounded-md text-base font-medium hover:bg-muted font-noto-naskh">
+              الفتاوى والمقالات
+            </Link>
+            <Link
+              href="/ai"
+              className="block px-3 py-3 rounded-md text-base font-medium hover:bg-muted font-noto-naskh">
+              المستشار الذكي
             </Link>
             {user?.role === "admin" && (
               <Link
                 href="/admin"
-                className="block text-secondary px-3 py-2 rounded-md font-medium">
-                Admin Panel
+                className="block px-3 py-3 rounded-md text-base font-medium text-amber-600 hover:bg-muted font-noto-naskh">
+                لوحة التحكم
               </Link>
             )}
           </div>
-          <div className="pt-4 pb-3 border-t border-primary-foreground/20">
+          <div className="pt-4 pb-6 border-t border-border px-4">
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-sm text-muted-foreground font-noto-naskh">
+                المظهر
+              </span>
+              <ThemeToggle />
+            </div>
             {user ? (
-              <div className="px-5 space-y-2">
-                <div className="flex items-center">
-                  <UserIcon className="h-5 w-5 mr-2" />
-                  <span className="text-sm font-medium">{user.email}</span>
+              <div className="space-y-3 text-right">
+                <div className="flex items-center justify-end px-3">
+                  <span className="text-sm font-medium mr-2">{user.email}</span>
+                  <UserIcon className="h-5 w-5 text-muted-foreground" />
                 </div>
                 <button
                   onClick={signOut}
-                  className="block w-full text-left bg-secondary text-primary px-3 py-2 rounded-md font-medium">
-                  Logout
+                  className="w-full text-right block px-3 py-2 rounded-md text-base font-medium text-destructive hover:bg-destructive/10 font-noto-naskh">
+                  تسجيل الخروج
                 </button>
               </div>
             ) : (
-              <div className="px-5 space-y-2">
+              <div className="grid grid-cols-2 gap-4">
                 <Link
                   href="/login"
-                  className="block text-center hover:text-secondary border border-transparent hover:border-secondary px-3 py-2 rounded-md font-medium">
-                  Login
+                  className="block text-center border border-input px-3 py-2 rounded-md font-medium hover:bg-muted font-noto-naskh">
+                  دخول
                 </Link>
                 <Link
                   href="/signup"
-                  className="block text-center bg-secondary text-primary px-3 py-2 rounded-md font-medium">
-                  Sign Up
+                  className="block text-center bg-primary text-primary-foreground px-3 py-2 rounded-md font-medium hover:bg-primary/90 font-noto-naskh">
+                  تسجيل
                 </Link>
               </div>
             )}
