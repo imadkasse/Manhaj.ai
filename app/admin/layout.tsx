@@ -1,8 +1,4 @@
-"use client";
 
-import { useAuth } from "@/components/AuthProvider";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Users, FileText, BookOpen, LayoutDashboard } from "lucide-react";
 
@@ -11,29 +7,7 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { user, loading } = useAuth();
-  const router = useRouter();
-  const [authorized, setAuthorized] = useState(false);
 
-  useEffect(() => {
-    if (!loading) {
-      if (!user) {
-        router.push("/login");
-      } else if (user.role !== "admin") {
-        router.push("/");
-      } else {
-        setAuthorized(true);
-      }
-    }
-  }, [user, loading, router]);
-
-  if (loading || !authorized) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        Loading Admin Panel...
-      </div>
-    );
-  }
 
   return (
     <div className="flex min-h-screen bg-muted/20">

@@ -30,6 +30,15 @@ export const authService = {
     });
   },
 
+  async signInWithGoogle() {
+    return await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/api/auth/callback`,
+      },
+    });
+  },
+
   async signOut() {
     return await supabase.auth.signOut();
   },

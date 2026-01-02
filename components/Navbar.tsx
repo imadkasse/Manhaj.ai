@@ -2,10 +2,27 @@
 
 import Link from "next/link";
 import { useAuth } from "@/components/AuthProvider";
-import { Menu, X, User as UserIcon } from "lucide-react";
+import {
+  Menu,
+  X,
+  User as UserIcon,
+  LogOut,
+  LayoutDashboard,
+  Settings,
+  ChevronDown,
+} from "lucide-react";
 import { useState } from "react";
-import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 
 export function Navbar() {
   const { user, signOut } = useAuth();
@@ -14,6 +31,10 @@ export function Navbar() {
   // Active link style handling could be added here similar to usePathname
   const navLinkClass =
     "text-foreground/80 hover:text-primary transition-colors px-3 py-2 text-base font-amiri font-bold";
+
+  const getInitials = (email: string) => {
+    return email ? email.substring(0, 2).toUpperCase() : "U";
+  };
 
   return (
     <nav className="bg-background/80 backdrop-blur-md border-b border-border sticky top-0 z-50">
@@ -45,32 +66,81 @@ export function Navbar() {
             <Link href="/ai" className={navLinkClass}>
               المستشار الذكي
             </Link>
-            {user?.role === "admin" && (
-              <Link
-                href="/admin"
-                className={cn(navLinkClass, "text-amber-600")}>
-                الإدارة
-              </Link>
-            )}
           </div>
 
           {/* Actions */}
           <div className="hidden md:flex items-center gap-4">
             <ThemeToggle />
             {user ? (
-              <div className="flex items-center gap-3 pl-2 border-l border-border/50">
-                <div className="text-right hidden lg:block">
-                  <p className="text-xs text-muted-foreground">حسابي</p>
-                  <p className="text-sm font-medium leading-none">
-                    {user.email?.split("@")[0]}
-                  </p>
-                </div>
-                <button
-                  onClick={signOut}
-                  className="text-xs font-medium text-muted-foreground hover:text-destructive transition-colors">
-                  الخروج
-                </button>
-              </div>
+              <DropdownMenu dir="rtl">
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="relative h-10 w-auto gap-3 rounded-full hover:bg-muted pl-2 pr-4 transition-all">
+                    <Avatar className="h-8 w-8 border border-border">
+                      <AvatarImage src="" alt={user.email || "User"} />
+                      <AvatarFallback className="bg-primary/10 text-primary">
+                        {getInitials(user.email || "")}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="hidden lg:flex flex-col items-start gap-0.5 text-right">
+                      <span className="text-sm font-bold font-noto-naskh truncate max-w-[100px]">
+                        {user.email?.split("@")[0]}
+                      </span>
+                      <span className="text-[10px] text-muted-foreground">
+                        مشترك
+                      </span>
+                    </div>
+                    <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1 text-right">
+                      <p className="text-sm font-medium leading-none font-noto-naskh">
+                        {user.email?.split("@")[0]}
+                      </p>
+                      <p className="text-xs leading-none text-muted-foreground">
+                        {user.email}
+                      </p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    asChild
+                    className="cursor-pointer justify-end focus:bg-primary/10 focus:text-primary">
+                    <Link
+                      href="/profile"
+                      className="w-full flex items-center justify-end gap-2 font-noto-naskh">
+                      <span>الملف الشخصي</span>
+                      <UserIcon className="mr-2 h-4 w-4" />
+                    </Link>
+                  </DropdownMenuItem>
+                  {user?.role === "admin" && (
+                    <DropdownMenuItem
+                      asChild
+                      className="cursor-pointer justify-end focus:bg-amber-50 focus:text-amber-600">
+                      <Link
+                        href="/admin"
+                        className="w-full flex items-center justify-end gap-2 font-noto-naskh text-amber-600">
+                        <span>لوحة التحكم</span>
+                        <LayoutDashboard className="mr-2 h-4 w-4" />
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuItem className="cursor-pointer justify-end focus:bg-muted font-noto-naskh">
+                    <span className="ml-auto">الإعدادات</span>
+                    <Settings className="ml-2 h-4 w-4" />
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={signOut}
+                    className="cursor-pointer justify-end text-destructive focus:bg-destructive/10 focus:text-destructive font-noto-naskh">
+                    <span className="ml-auto">تسجيل الخروج</span>
+                    <LogOut className="ml-2 h-4 w-4" />
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : (
               <div className="flex items-center gap-3">
                 <Link
@@ -144,14 +214,39 @@ export function Navbar() {
             </div>
             {user ? (
               <div className="space-y-3 text-right">
-                <div className="flex items-center justify-end px-3">
-                  <span className="text-sm font-medium mr-2">{user.email}</span>
-                  <UserIcon className="h-5 w-5 text-muted-foreground" />
+                <div className="flex items-center justify-end px-3 gap-3">
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium">
+                      {user.email?.split("@")[0]}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {user.email}
+                    </span>
+                  </div>
+                  <Avatar className="h-10 w-10 border border-border">
+                    <AvatarImage src="" alt={user.email || "User"} />
+                    <AvatarFallback className="bg-primary/10 text-primary">
+                      {getInitials(user.email || "")}
+                    </AvatarFallback>
+                  </Avatar>
                 </div>
+                <Link
+                  href="/profile"
+                  className="w-full text-right flex items-center justify-end gap-2 px-3 py-2 rounded-md text-base font-medium hover:bg-muted font-noto-naskh">
+                  <span>الملف الشخصي</span>
+                  <UserIcon className="h-4 w-4" />
+                </Link>
+                <Link
+                  href="/profile"
+                  className="w-full text-right flex items-center justify-end gap-2 px-3 py-2 rounded-md text-base font-medium hover:bg-muted font-noto-naskh">
+                  <span>الإعدادات</span>
+                  <Settings className="h-4 w-4" />
+                </Link>
                 <button
                   onClick={signOut}
-                  className="w-full text-right block px-3 py-2 rounded-md text-base font-medium text-destructive hover:bg-destructive/10 font-noto-naskh">
-                  تسجيل الخروج
+                  className="w-full text-right flex items-center justify-end gap-2 px-3 py-2 rounded-md text-base font-medium text-destructive hover:bg-destructive/10 font-noto-naskh">
+                  <span>تسجيل الخروج</span>
+                  <LogOut className="h-4 w-4" />
                 </button>
               </div>
             ) : (

@@ -1,5 +1,6 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { Database } from "./types/supabase.types";
 
 export async function proxy(request: NextRequest) {
   let response = NextResponse.next({
@@ -30,7 +31,16 @@ export async function proxy(request: NextRequest) {
   const {
     data: { session },
   } = await supabase.auth.getSession();
-  
+  // extract user role from session
+  const { data: userData } = await supabase.auth.getUser();
+  const {
+    data: user,
+  }: { data: Database["public"]["Tables"]["profiles"]["Row"] | null } =
+    await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", userData.user?.id)
+      .single();
 
   // Protect admin routes
   if (request.nextUrl.pathname.startsWith("/admin")) {
@@ -38,6 +48,14 @@ export async function proxy(request: NextRequest) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
     // Optional: Check if user is actually admin if custom claims are used
+    if (user?.role !== 'admin') {
+      return NextResponse.redirect(new URL("/profile", request.url));
+    }
+  }
+  if (request.nextUrl.pathname.startsWith("/ai")) {
+    if (!session) {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
   }
 
   // Redirect authenticated users away from auth pages
